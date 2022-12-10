@@ -9,6 +9,13 @@ cap.set(3, 1280)
 cap.set(4, 720)
 
 
+def text(img, text, pos, scale, color, thickness, stroke):
+    cv2.putText(img, text, pos, cv2.FONT_HERSHEY_SIMPLEX, scale,
+                (0, 0, 0), thickness + stroke)
+    cv2.putText(img, text, pos, cv2.FONT_HERSHEY_SIMPLEX, scale,
+                color, thickness)
+
+
 def pic(imgBack, imgFront, pos):
     hf, wf, cf = imgFront.shape
     hb, wb, cb = imgBack.shape
@@ -79,23 +86,22 @@ class SnakeGameClass:
         self.score = 0
         self.record = 0
         self.gameOver = False
-        self.gameStarted = True
+        self.gameStarted = False
 
     def update(self, imgMain, currentHead):
         if not self.gameStarted:
-            cv2.putText(imgMain, "Hello! In this game you ", [50, 100], cv2.FONT_HERSHEY_SIMPLEX, 3,
-                        (129, 129, 243), 5)
-            cv2.putText(imgMain, "need to collect fruits", [50, 200], cv2.FONT_HERSHEY_SIMPLEX, 3,
-                        (129, 129, 243), 5)
-            cv2.putText(imgMain, "by your hand!", [50, 300], cv2.FONT_HERSHEY_SIMPLEX, 3,
-                        (129, 129, 243), 5)
+            text(imgMain, "Hello! In this game you", [75, 100], 3, (129, 129, 243), 5, 7)
+            text(imgMain, "need to collect fruits", [125, 200], 3, (129, 129, 243), 5, 7)
+            text(imgMain, "by your hand!", [300, 300], 3, (129, 129, 243), 5, 7)
+            text(imgMain, "If you are ready press", [105, 500], 3, (129, 129, 243), 5, 7)
+            text(imgMain, "Space", [500, 600], 3, (208, 255, 234), 5, 7)
         elif self.gameOver:
-            cv2.putText(imgMain, f"Score: {self.score}", [10, 50], cv2.FONT_HERSHEY_SIMPLEX, 2, (208, 255, 234), 5)
-            cv2.putText(imgMain, f"Record: {self.record}", [900, 50], cv2.FONT_HERSHEY_SIMPLEX, 2, (211, 225, 149), 5)
-            cv2.putText(imgMain, "Game Over", [200, 400], cv2.FONT_HERSHEY_SIMPLEX, 5, (129, 129, 243), 10)
+            text(imgMain, f"Score: {self.score}", [10, 50], 2, (208, 255, 234), 5, 6)
+            text(imgMain, f"Record: {self.record}", [900, 50], 2, (211, 225, 149), 5, 6)
+            text(imgMain, "Game Over", [200, 400], 5, (129, 129, 243), 10, 14)
         else:
-            cv2.putText(imgMain, f"Score: {self.score}", [10, 50], cv2.FONT_HERSHEY_SIMPLEX, 2, (208, 255, 234), 5)
-            cv2.putText(imgMain, f"Record: {self.record}", [900, 50], cv2.FONT_HERSHEY_SIMPLEX, 2, (211, 225, 149), 5)
+            text(imgMain, f"Score: {self.score}", [10, 50], 2, (208, 255, 234), 5, 6)
+            text(imgMain, f"Record: {self.record}", [900, 50], 2, (211, 225, 149), 5, 6)
             px, py = self.previousHead
             cx, cy = currentHead
 
@@ -137,7 +143,6 @@ class SnakeGameClass:
             # Check for Collision
             pts = np.array(self.points[:-2], int)
             pts = pts.reshape((-1, 1, 2))
-            cv2.polylines(imgMain, [pts], False, (0, 255, 0), 3)
             minDist = cv2.pointPolygonTest(pts, (cx, cy), True)
 
             if -1 <= minDist <= 1:
@@ -183,5 +188,7 @@ while True:
     key = cv2.waitKey(1)
     if key == ord('r'):
         game.gameOver = False
-    elif key == ord('q'):
+    elif key == 32:
+        game.gameStarted = True
+    elif key == 27:
         break
