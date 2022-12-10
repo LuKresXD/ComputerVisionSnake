@@ -79,7 +79,7 @@ class SnakeGameClass:
         self.score = 0
         self.record = 0
         self.gameOver = False
-        self.gameStarted = False
+        self.gameStarted = True
 
     def update(self, imgMain, currentHead):
         if not self.gameStarted:
