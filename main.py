@@ -42,7 +42,6 @@ def findHands(img):
     if results.multi_hand_landmarks:
         for handLms in results.multi_hand_landmarks:
             myHand = {}
-            ## lmList
             mylmList = []
             xList = []
             yList = []
@@ -55,8 +54,7 @@ def findHands(img):
             ymin, ymax = min(yList), max(yList)
             boxW, boxH = xmax - xmin, ymax - ymin
             bbox = xmin, ymin, boxW, boxH
-            cx, cy = bbox[0] + (bbox[2] // 2), \
-                     bbox[1] + (bbox[3] // 2)
+            cx, cy = bbox[0] + (bbox[2] // 2), bbox[1] + (bbox[3] // 2)
 
             myHand["lmList"] = mylmList
             myHand["bbox"] = bbox
@@ -79,14 +77,16 @@ class SnakeGameClass:
         self.previousHead = 0, 0  # previous head point
 
         self.fruitSet = 0
-        self.imgFood = pics[self.fruitSet][random.randint(0, 15)]
+        self.imgFood = food[self.fruitSet][random.randint(0, 15)]
         self.hFood, self.wFood, _ = self.imgFood.shape
         self.foodPoint = random.randint(100, 1000), random.randint(100, 600)
 
         self.score = 0
         self.record = 0
+        self.skin = 0
         self.gameOver = False
         self.gameStarted = False
+        self.shopEnabled = False
 
     def update(self, imgMain, currentHead):
         if not self.gameStarted:
@@ -95,6 +95,8 @@ class SnakeGameClass:
             text(imgMain, "by your hand!", [300, 300], 3, (129, 129, 243), 5, 7)
             text(imgMain, "If you are ready press", [105, 500], 3, (129, 129, 243), 5, 7)
             text(imgMain, "Space", [500, 600], 3, (208, 255, 234), 5, 7)
+        elif self.shopEnabled:
+            text(imgMain, "Shop", [200, 400], 5, (129, 129, 243), 10, 14)
         elif self.gameOver:
             text(imgMain, f"Score: {self.score}", [10, 50], 2, (208, 255, 234), 5, 6)
             text(imgMain, f"Record: {self.record}", [900, 50], 2, (211, 225, 149), 5, 6)
@@ -122,8 +124,9 @@ class SnakeGameClass:
 
             # Check if snake ate the Food
             rx, ry = self.foodPoint
-            if rx - self.wFood // 2 < cx < rx + self.wFood // 2 and ry - self.hFood // 2 < cy < ry + self.hFood // 2:
-                self.imgFood = pics[self.fruitSet][random.randint(0, 15)]
+            if rx - self.wFood // 2 < cx < rx + self.wFood // 2 and \
+                    ry - self.hFood // 2 < cy < ry + self.hFood // 2:
+                self.imgFood = food[self.fruitSet][random.randint(0, 15)]
                 self.allowedLength += 50
                 self.score += 1
                 self.record = max(self.score, self.record)
@@ -132,10 +135,15 @@ class SnakeGameClass:
 
             # Draw Snake
             if self.points:
+                size = len(self.points)
+                colors = (np.linspace(skins[self.skin][0][0], skins[self.skin][1][0], size),
+                          np.linspace(skins[self.skin][0][1], skins[self.skin][1][1], size),
+                          np.linspace(skins[self.skin][0][2], skins[self.skin][1][2], size))
                 for i, point in enumerate(self.points):
                     if i != 0:
-                        cv2.line(imgMain, self.points[i - 1], self.points[i], (0, 0, 255), 20)
-                cv2.circle(imgMain, self.points[-1], 20, (0, 255, 0), cv2.FILLED)
+                        cv2.line(imgMain, self.points[i - 1], self.points[i],
+                                 (colors[0][i], colors[1][i], colors[2][i]), 20)
+                cv2.circle(imgMain, self.points[-1], 20, skins[self.skin][1], cv2.FILLED)
 
             # Draw Food
             imgMain = pic(imgMain, self.imgFood, (rx - self.wFood // 2, ry - self.hFood // 2))
@@ -158,7 +166,7 @@ class SnakeGameClass:
         return imgMain
 
 
-pics = [[cv2.imread("Pictures/Fruits/banana.png", cv2.IMREAD_UNCHANGED),
+food = [[cv2.imread("Pictures/Fruits/banana.png", cv2.IMREAD_UNCHANGED),
          cv2.imread("Pictures/Fruits/blueberries.png", cv2.IMREAD_UNCHANGED),
          cv2.imread("Pictures/Fruits/cherries.png", cv2.IMREAD_UNCHANGED),
          cv2.imread("Pictures/Fruits/grapes.png", cv2.IMREAD_UNCHANGED),
@@ -174,6 +182,14 @@ pics = [[cv2.imread("Pictures/Fruits/banana.png", cv2.IMREAD_UNCHANGED),
          cv2.imread("Pictures/Fruits/strawberry.png", cv2.IMREAD_UNCHANGED),
          cv2.imread("Pictures/Fruits/tangerine.png", cv2.IMREAD_UNCHANGED),
          cv2.imread("Pictures/Fruits/watermelon.png", cv2.IMREAD_UNCHANGED)]]
+
+skins = [[(31, 64, 55), (200, 242, 153)],
+         [(199, 195, 189), (80, 62, 44)],
+         [(39, 43, 185), (192, 101, 21)],
+         [(195, 96, 131), (145, 191, 46)],
+         [(255, 159, 0), (75, 47, 236)],
+         [(142, 153, 17), (125, 239, 56)]]
+
 game = SnakeGameClass()
 
 while True:
@@ -187,8 +203,11 @@ while True:
     cv2.imshow("Image", img)
     key = cv2.waitKey(1)
     if key == ord('r'):
-        game.gameOver = False
+        game.skin = (game.skin + 1) % len(skins)
+    elif key == ord('s') and game.gameOver and game.gameStarted:
+        game.shopEnabled ^= True
     elif key == 32:
+        game.gameOer = False
         game.gameStarted = True
     elif key == 27:
         break
