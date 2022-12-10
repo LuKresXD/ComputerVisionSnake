@@ -158,22 +158,22 @@ class SnakeGameClass:
         return imgMain
 
 
-pics = [[cv2.imread("Pictures/Fruits/banana.png"),
-         cv2.imread("Pictures/Fruits/blueberries.png"),
-         cv2.imread("Pictures/Fruits/cherries.png"),
-         cv2.imread("Pictures/Fruits/grapes.png"),
-         cv2.imread("Pictures/Fruits/green-apple.png"),
-         cv2.imread("Pictures/Fruits/kiwi.png"),
-         cv2.imread("Pictures/Fruits/lemon.png"),
-         cv2.imread("Pictures/Fruits/mango.png"),
-         cv2.imread("Pictures/Fruits/melon.png"),
-         cv2.imread("Pictures/Fruits/peach.png"),
-         cv2.imread("Pictures/Fruits/pear.png"),
-         cv2.imread("Pictures/Fruits/pineapple.png"),
-         cv2.imread("Pictures/Fruits/red-apple.png"),
-         cv2.imread("Pictures/Fruits/strawberry.png"),
-         cv2.imread("Pictures/Fruits/tangerine.png"),
-         cv2.imread("Pictures/Fruits/watermelon.png")]]
+pics = [[cv2.imread("Pictures/Fruits/banana.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/blueberries.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/cherries.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/grapes.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/green-apple.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/kiwi.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/lemon.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/mango.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/melon.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/peach.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/pear.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/pineapple.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/red-apple.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/strawberry.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/tangerine.png", cv2.IMREAD_UNCHANGED),
+         cv2.imread("Pictures/Fruits/watermelon.png", cv2.IMREAD_UNCHANGED)]]
 game = SnakeGameClass()
 
 while True:
