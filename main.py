@@ -82,22 +82,38 @@ class SnakeGameClass:
         self.foodPoint = random.randint(100, 1000), random.randint(100, 600)
 
         self.score = 0
+        self.coins = 0
         self.record = 0
         self.skin = 0
         self.gameOver = False
         self.gameStarted = False
         self.shopEnabled = False
+        self.shopSection = 0
+
+        self.cnt1 = 0
 
     def update(self, imgMain, currentHead):
+        cx, cy = currentHead
+        # print(cx, cy)
         if not self.gameStarted:
             text(imgMain, "Hello! In this game you", [75, 100], 3, (129, 129, 243), 5, 7)
             text(imgMain, "need to collect fruits", [125, 200], 3, (129, 129, 243), 5, 7)
             text(imgMain, "by your hand!", [300, 300], 3, (129, 129, 243), 5, 7)
-            text(imgMain, "If you are ready press", [105, 500], 3, (129, 129, 243), 5, 7)
-            text(imgMain, "Space", [500, 600], 3, (208, 255, 234), 5, 7)
+            text(imgMain, "If you are ready hold", [105, 500], 3, (129, 129, 243), 5, 7)
+            imgMain = pic(imgMain, play, (525, 550))
+            imgMain = pic(imgMain, cursor, (cx, cy))
+            if 525 < cx < 809 and 550 < cy < 683:
+                self.cnt1 += 1
+            else:
+                self.cnt1 = 0
+            if self.cnt1 == 50:
+                self.gameStarted = True
         elif self.shopEnabled:
-            text(imgMain, "Shop", [200, 400], 5, (129, 129, 243), 10, 14)
+            text(imgMain, "Shop", [10, 50], 2, (208, 255, 234), 5, 6)
+            text(imgMain, f"Coins: {self.coins}", [950, 50], 2, (211, 225, 149), 5, 6)
+            imgMain = pic(imgMain, cursor, (cx, cy))
         elif self.gameOver:
+            imgMain = pic(imgMain, cursor, (cx, cy))
             text(imgMain, f"Score: {self.score}", [10, 50], 2, (208, 255, 234), 5, 6)
             text(imgMain, f"Record: {self.record}", [900, 50], 2, (211, 225, 149), 5, 6)
             text(imgMain, "Game Over", [200, 400], 5, (129, 129, 243), 10, 14)
@@ -105,7 +121,6 @@ class SnakeGameClass:
             text(imgMain, f"Score: {self.score}", [10, 50], 2, (208, 255, 234), 5, 6)
             text(imgMain, f"Record: {self.record}", [900, 50], 2, (211, 225, 149), 5, 6)
             px, py = self.previousHead
-            cx, cy = currentHead
 
             self.points.append([cx, cy])
             distance = math.hypot(cx - px, cy - py)
@@ -129,6 +144,7 @@ class SnakeGameClass:
                 self.imgFood = food[self.fruitSet][random.randint(0, 15)]
                 self.allowedLength += 50
                 self.score += 1
+                self.coins += 1
                 self.record = max(self.score, self.record)
                 self.foodPoint = random.randint(100, 1000), random.randint(100, 600)
                 print(self.score)
@@ -183,6 +199,9 @@ food = [[cv2.imread("Pictures/Fruits/banana.png", cv2.IMREAD_UNCHANGED),
          cv2.imread("Pictures/Fruits/tangerine.png", cv2.IMREAD_UNCHANGED),
          cv2.imread("Pictures/Fruits/watermelon.png", cv2.IMREAD_UNCHANGED)]]
 
+cursor = cv2.imread("Pictures/GUI/cursor.png", cv2.IMREAD_UNCHANGED)
+play = cv2.imread("Pictures/GUI/play.png", cv2.IMREAD_UNCHANGED)
+
 skins = [[(31, 64, 55), (200, 242, 153)],
          [(199, 195, 189), (80, 62, 44)],
          [(39, 43, 185), (192, 101, 21)],
@@ -204,10 +223,24 @@ while True:
     key = cv2.waitKey(1)
     if key == ord('r'):
         game.skin = (game.skin + 1) % len(skins)
-    elif key == ord('s') and game.gameOver and game.gameStarted:
-        game.shopEnabled ^= True
-    elif key == 32:
-        game.gameOer = False
+    elif key == ord('b') and game.gameOver and game.gameStarted:
+        game.shopEnabled = True
+    elif key == 32:  # space
+        game.gameOver = False
         game.gameStarted = True
-    elif key == 27:
+    elif key == 27:  # esc
         break
+    if game.shopEnabled:
+        if game.shopSection == 0:
+            if key == ord('1'):
+                game.shopSection = 1
+            elif key == ord('2'):
+                game.shopSection = 2
+            elif key == 127:  # backspace
+                game.shopEnabled = False
+        elif game.shopSection == 1:
+            if key == 127:  # backspace
+                game.shopEnabled = 0
+        elif game.shopSection == 2:
+            if key == 127:  # backspace
+                game.shopEnabled = 0
