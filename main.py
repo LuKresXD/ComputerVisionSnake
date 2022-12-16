@@ -82,9 +82,10 @@ class SnakeGameClass:
         self.foodPoint = random.randint(100, 1000), random.randint(100, 600)
 
         self.score = 0
-        self.coins = 0
+        self.coins = 100
         self.record = 0
         self.skin = 0
+        self.purchased = [0]
         self.gameOver = False
         self.gameStarted = False
         self.shopEnabled = False
@@ -105,21 +106,107 @@ class SnakeGameClass:
                 self.cnt += 1
             else:
                 self.cnt = 0
-            if self.cnt == 50:
+            if self.cnt == 25:
                 self.cnt = 0
                 self.gameStarted = True
-        elif self.shopEnabled:
-            text(imgMain, "Shop", [10, 50], 2, (208, 255, 234), 5, 6)
-            text(imgMain, f"{self.coins}", [1175, 50], 2, (211, 225, 149), 5, 6)
+        elif self.shopSection == 1:
+            text(imgMain, "Skins", [10, 50], 2, (208, 255, 234), 5, 6)
+            text(imgMain, f"{self.coins}", [1100, 50], 2, (211, 225, 149), 5, 6)
             imgMain = pic(imgMain, coin, (1225, 7))
             imgMain = pic(imgMain, back, (25, 560))
-            if 25 < cx < 158 and 560 < cy < 808:
+            if 1 not in self.purchased:
+                imgMain = pic(imgMain, skin1, (204, 130))
+            else:
+                imgMain = pic(imgMain, purchased, (204, 130))
+            if 2 not in self.purchased:
+                imgMain = pic(imgMain, skin2, (562, 130))
+            else:
+                imgMain = pic(imgMain, purchased, (562, 130))
+            if 3 not in self.purchased:
+                imgMain = pic(imgMain, skin3, (920, 130))
+            else:
+                imgMain = pic(imgMain, purchased, (920, 130))
+            if 4 not in self.purchased:
+                imgMain = pic(imgMain, skin4, (204, 380))
+            else:
+                imgMain = pic(imgMain, purchased, (204, 380))
+            if 5 not in self.purchased:
+                imgMain = pic(imgMain, skin5, (562, 380))
+            else:
+                imgMain = pic(imgMain, purchased, (562, 380))
+            if 6 not in self.purchased:
+                imgMain = pic(imgMain, skin6, (920, 380))
+            else:
+                imgMain = pic(imgMain, purchased, (920, 380))
+            if 25 < cx < 309 and 560 < cy < 693:  # back
                 self.cnt += 1
+                if self.cnt == 25:
+                    self.cnt = 0
+                    self.coins -= 10
+                    self.shopSection = 0
+            elif 204 < cx < 358 and 130 < cy < 294:  # skin1
+                self.cnt += 1
+                if self.cnt == 25 and self.coins >= 10:
+                    self.cnt = 0
+                    self.coins -= 10
+                    self.purchased.append(1)
+            elif 562 < cx < 716 and 130 < cy < 294:  # skin2
+                self.cnt += 1
+                if self.cnt == 25 and self.coins >= 10:
+                    self.cnt = 0
+                    self.coins -= 10
+                    self.purchased.append(2)
+            elif 920 < cx < 1074 and 130 < cy < 294:  # skin3
+                self.cnt += 1
+                if self.cnt == 25 and self.coins >= 10:
+                    self.cnt = 0
+                    self.coins -= 10
+                    self.purchased.append(3)
+            elif 204 < cx < 358 and 380 < cy < 544:  # skin4
+                self.cnt += 1
+                if self.cnt == 25 and self.coins >= 10:
+                    self.cnt = 0
+                    self.coins -= 10
+                    self.purchased.append(4)
+            elif 562 < cx < 716 and 380 < cy < 544:  # skin5
+                self.cnt += 1
+                if self.cnt == 25 and self.coins >= 10:
+                    self.cnt = 0
+                    self.coins -= 10
+                    self.purchased.append(5)
+            elif 920 < cx < 1074 and 380 < cy < 544:  # skin6
+                self.cnt += 1
+                if self.cnt == 25 and self.coins >= 10:
+                    self.cnt = 0
+                    self.coins -= 10
+                    self.purchased.append(6)
             else:
                 self.cnt = 0
-            if self.cnt == 50:
+
+        elif self.shopEnabled:
+            text(imgMain, "Shop", [10, 50], 2, (208, 255, 234), 5, 6)
+            text(imgMain, f"{self.coins}", [1100, 50], 2, (211, 225, 149), 5, 6)
+            imgMain = pic(imgMain, coin, (1225, 7))
+            imgMain = pic(imgMain, back, (25, 560))
+            imgMain = pic(imgMain, skin, (226, 200))
+            imgMain = pic(imgMain, foodi, (772, 200))
+            if 25 < cx < 309 and 560 < cy < 693:  # back
+                self.cnt += 1
+                if self.cnt == 25:
+                    self.cnt = 0
+                    self.shopEnabled = False
+            elif 226 < cx < 526 and 200 < cy < 520:  # skin
+                self.cnt += 1
+                if self.cnt == 25:
+                    self.cnt = 0
+                    self.shopSection = 1
+            elif 752 < cx < 1052 and 200 < cy < 520:  # food
+                self.cnt += 1
+                if self.cnt == 25:
+                    self.cnt = 0
+                    self.shopSection = 2
+            else:
                 self.cnt = 0
-                self.shopEnabled = False
 
         elif self.gameOver:
             text(imgMain, f"Score: {self.score}", [10, 50], 2, (208, 255, 234), 5, 6)
@@ -127,15 +214,16 @@ class SnakeGameClass:
             imgMain = pic(imgMain, game_over, (220, 125))
             imgMain = pic(imgMain, shop, (500, 400))
             imgMain = pic(imgMain, restart, (500, 550))
-            if 500 < cx < 784 and 400 < cy < 533:
+            if 500 < cx < 784 and 400 < cy < 533:  # shop
                 self.cnt += 1
-                if self.cnt == 50:
+                if self.cnt == 25:
                     self.cnt = 0
                     self.shopEnabled = True
-            elif 500 < cx < 784 and 550 < cy < 683:
+            elif 500 < cx < 784 and 550 < cy < 683:  # restart
                 self.cnt += 1
-                if self.cnt == 50:
+                if self.cnt == 25:
                     self.cnt = 0
+                    game.skin = self.purchased[random.randint(0, len(self.purchased) - 1)]
                     self.gameOver = False
             else:
                 self.cnt = 0
@@ -233,12 +321,23 @@ game_over = cv2.imread("Pictures/GUI/game_over.png", cv2.IMREAD_UNCHANGED)
 coin = cv2.imread("Pictures/GUI/coin.png", cv2.IMREAD_UNCHANGED)
 back = cv2.imread("Pictures/GUI/back.png", cv2.IMREAD_UNCHANGED)
 shop = cv2.imread("Pictures/GUI/shop.png", cv2.IMREAD_UNCHANGED)
+skin = cv2.resize(cv2.imread("Pictures/GUI/skin.png", cv2.IMREAD_UNCHANGED), (300, 320))
+foodi = cv2.resize(cv2.imread("Pictures/GUI/food.png", cv2.IMREAD_UNCHANGED), (300, 320))
 
-skins = [[(31, 64, 55), (200, 242, 153)],
+skin1 = cv2.imread("Pictures/GUI/skins/first.png", cv2.IMREAD_UNCHANGED)
+skin2 = cv2.imread("Pictures/GUI/skins/second.png", cv2.IMREAD_UNCHANGED)
+skin3 = cv2.imread("Pictures/GUI/skins/third.png", cv2.IMREAD_UNCHANGED)
+skin4 = cv2.imread("Pictures/GUI/skins/fourth.png", cv2.IMREAD_UNCHANGED)
+skin5 = cv2.imread("Pictures/GUI/skins/fifth.png", cv2.IMREAD_UNCHANGED)
+skin6 = cv2.imread("Pictures/GUI/skins/sixth.png", cv2.IMREAD_UNCHANGED)
+purchased = cv2.imread("Pictures/GUI/skins/purchased.png", cv2.IMREAD_UNCHANGED)
+
+skins = [[(200, 200, 200), (50, 50, 50)],
+         [(31, 64, 55), (200, 242, 153)],
          [(199, 195, 189), (80, 62, 44)],
-         [(39, 43, 185), (192, 101, 21)],
+         [(199, 167, 217), (220, 252, 255)],
          [(195, 96, 131), (145, 191, 46)],
-         [(255, 159, 0), (75, 47, 236)],
+         [(125, 92, 252), (251, 130, 106)],
          [(142, 153, 17), (125, 239, 56)]]
 
 game = SnakeGameClass()
@@ -253,9 +352,7 @@ while True:
         img = game.update(img, pointIndex)
     cv2.imshow("Image", img)
     key = cv2.waitKey(1)
-    if key == ord('r'):
-        game.skin = (game.skin + 1) % len(skins)
-    elif key == ord('b') and game.gameOver and game.gameStarted:
+    if key == ord('b') and game.gameOver and game.gameStarted:
         game.shopEnabled = True
     elif key == 27:  # esc
         break
