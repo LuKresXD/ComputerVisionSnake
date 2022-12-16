@@ -90,7 +90,7 @@ class SnakeGameClass:
         self.shopEnabled = False
         self.shopSection = 0
 
-        self.cnt1 = 0
+        self.cnt = 0
 
     def update(self, imgMain, currentHead):
         cx, cy = currentHead
@@ -102,11 +102,11 @@ class SnakeGameClass:
             text(imgMain, "If you are ready hold", [105, 500], 3, (129, 129, 243), 5, 7)
             imgMain = pic(imgMain, play, (500, 550))
             if 525 < cx < 809 and 550 < cy < 683:
-                self.cnt1 += 1
+                self.cnt += 1
             else:
-                self.cnt1 = 0
-            if self.cnt1 == 50:
-                self.cnt1 = 0
+                self.cnt = 0
+            if self.cnt == 50:
+                self.cnt = 0
                 self.gameStarted = True
         elif self.shopEnabled:
             text(imgMain, "Shop", [10, 50], 2, (208, 255, 234), 5, 6)
@@ -114,25 +114,31 @@ class SnakeGameClass:
             imgMain = pic(imgMain, coin, (1225, 7))
             imgMain = pic(imgMain, back, (25, 560))
             if 25 < cx < 158 and 560 < cy < 808:
-                self.cnt1 += 1
+                self.cnt += 1
             else:
-                self.cnt1 = 0
-            if self.cnt1 == 50:
-                self.cnt1 = 0
+                self.cnt = 0
+            if self.cnt == 50:
+                self.cnt = 0
                 self.shopEnabled = False
 
         elif self.gameOver:
             text(imgMain, f"Score: {self.score}", [10, 50], 2, (208, 255, 234), 5, 6)
             text(imgMain, f"Record: {self.record}", [900, 50], 2, (211, 225, 149), 5, 6)
-            imgMain = pic(imgMain, game_over, (220, 200))
+            imgMain = pic(imgMain, game_over, (220, 125))
+            imgMain = pic(imgMain, shop, (500, 400))
             imgMain = pic(imgMain, restart, (500, 550))
-            if 525 < cx < 809 and 550 < cy < 683:
-                self.cnt1 += 1
+            if 500 < cx < 784 and 400 < cy < 533:
+                self.cnt += 1
+                if self.cnt == 50:
+                    self.cnt = 0
+                    self.shopEnabled = True
+            elif 500 < cx < 784 and 550 < cy < 683:
+                self.cnt += 1
+                if self.cnt == 50:
+                    self.cnt = 0
+                    self.gameOver = False
             else:
-                self.cnt1 = 0
-            if self.cnt1 == 50:
-                self.cnt1 = 0
-                self.gameOver = False
+                self.cnt = 0
         else:
             text(imgMain, f"Score: {self.score}", [10, 50], 2, (208, 255, 234), 5, 6)
             text(imgMain, f"Record: {self.record}", [900, 50], 2, (211, 225, 149), 5, 6)
@@ -196,7 +202,10 @@ class SnakeGameClass:
                 self.previousHead = 0, 0  # previous head point
                 self.foodPoint = random.randint(100, 1000), random.randint(100, 600)
         if self.gameOver or not self.gameStarted:
-            imgMain = pic(imgMain, cursor, (cx, cy))
+            try:
+                imgMain = pic(imgMain, cursor, (cx, cy))
+            except:
+                pass
         return imgMain
 
 
@@ -223,6 +232,7 @@ restart = cv2.imread("Pictures/GUI/restart.png", cv2.IMREAD_UNCHANGED)
 game_over = cv2.imread("Pictures/GUI/game_over.png", cv2.IMREAD_UNCHANGED)
 coin = cv2.imread("Pictures/GUI/coin.png", cv2.IMREAD_UNCHANGED)
 back = cv2.imread("Pictures/GUI/back.png", cv2.IMREAD_UNCHANGED)
+shop = cv2.imread("Pictures/GUI/shop.png", cv2.IMREAD_UNCHANGED)
 
 skins = [[(31, 64, 55), (200, 242, 153)],
          [(199, 195, 189), (80, 62, 44)],
