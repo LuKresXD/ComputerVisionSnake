@@ -57,7 +57,7 @@ purchased = cv2.imread("Pictures/GUI/skins/purchased.png", cv2.IMREAD_UNCHANGED)
 
 food1 = cv2.resize(cv2.imread("Pictures/GUI/vegetables.png", cv2.IMREAD_UNCHANGED), (308, 524))
 food2 = cv2.resize(cv2.imread("Pictures/GUI/other.png", cv2.IMREAD_UNCHANGED), (308, 524))
-food_purchased = cv2.resize(cv2.imread("Pictures/GUI/skins/purchased.png", cv2.IMREAD_UNCHANGED), (308, 524))
+food_purchased = cv2.resize(cv2.imread("Pictures/GUI/skins/purchased.png", cv2.IMREAD_UNCHANGED), (308, 328))
 
 skins = [[(200, 200, 200), (50, 50, 50)],
          [(31, 64, 55), (200, 242, 153)],

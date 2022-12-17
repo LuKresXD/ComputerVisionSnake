@@ -13,7 +13,7 @@ while True:
     hands, img = findHands(img)
 
     if hands:
-        pointIndex = hands[0]['lmList'][8][0:2]
+        pointIndex = hands[8][0:2]
         img = game.update(img, pointIndex)
     cv2.imshow("Image", img)
     key = cv2.waitKey(1)
